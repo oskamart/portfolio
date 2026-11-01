@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=osys.one portfolio (opencode)
+Comment=Engineering portfolio (opencode agent) — measured from source
+Exec=/home/o/portfolio-osys-one/launch.sh
+Icon=/home/o/portfolio-osys-one/assets/favicon.svg
+Terminal=false
+Categories=Network;WebBrowser;Development;
+StartupNotify=true
