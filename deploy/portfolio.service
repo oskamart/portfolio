@@ -2,7 +2,7 @@
 #
 # Local-first serving of the portfolio on Origo.
 #
-# The site is a static tree; this unit serves it on loopback:8090 with the
+# The site is a static tree; this unit serves it on loopback:8743 with the
 # same headers the production server uses.
 #
 # Install (as the o user on the host):
