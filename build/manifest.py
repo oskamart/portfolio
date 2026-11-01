@@ -1,3 +1,4 @@
+# osys-one-portfolio · maintained by the opencode agent session · do not edit from other sessions
 #!/usr/bin/env python3
 """Measure the portfolio's own numbers from the machine and emit assets/manifest.json.
 
@@ -158,6 +159,11 @@ SYSTEMS = {
     "lorapilot_tests": {
         "label": "LoRA pilot tests",
         "root": "lora-pilot/tests",
+        "repo": None,
+    },
+    "origobackup": {
+        "label": "Origo Backup",
+        "root": "backup-app",
         "repo": None,
     },
 }

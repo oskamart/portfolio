@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-01T20:00:17+00:00",
+  "generated": "2026-11-01T20:06:26+00:00",
   "generator": "build/manifest.py",
   "systems": {
     "uvmstack": {
@@ -43,12 +43,19 @@
       "doc_loc": 0,
       "bytes": 736306,
       "commits": 0
+    },
+    "origobackup": {
+      "files": 19,
+      "code_loc": 4459,
+      "doc_loc": 334,
+      "bytes": 314800,
+      "commits": 0
     }
   },
   "totals": {
-    "code_loc": 316704,
-    "doc_loc": 34688,
-    "files": 1312,
+    "code_loc": 321163,
+    "doc_loc": 35022,
+    "files": 1331,
     "commits": 432
   },
   "taa_core": {

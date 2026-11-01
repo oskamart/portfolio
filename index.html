@@ -1,3 +1,4 @@
+<!-- osys-one-portfolio · maintained by the opencode agent session · do not edit from other sessions -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,11 +19,12 @@
 {
   "@context": "https://schema.org",
   "@type": "Person",
-  "name": "osys.one",
+  "name": "Oskar Mårtensson",
+  "alternateName": "osys.one",
   "url": "https://osys.one/",
   "jobTitle": "Systems engineer",
   "worksFor": { "@type": "Organization", "name": "Ardverium Labs" },
-  "email": "founders@ardveriumlabs.com"
+  "email": "oskar@osys.one"
 }
 </script>
 </head>
@@ -76,7 +78,7 @@
   <div class="hero__scrim" aria-hidden="true"></div>
 
   <div class="hero__in">
-    <p class="hero__kicker">Ardverium Labs · Origo · Oden</p>
+    <p class="hero__kicker">Oskar Mårtensson · Ardverium Labs · Origo · Oden</p>
 
     <h1 class="hero__title">
       Systems built to be<br>
@@ -92,6 +94,11 @@
     <div class="hero__actions">
       <a class="btn btn--primary" href="#work">See the work</a>
       <a class="btn" href="https://github.com/trishinraj/uvm_engine" rel="noopener">UVMStack on GitHub</a>
+      <button class="btn btn--quiet" type="button" id="motion-toggle"
+              aria-pressed="false" hidden>
+        <span class="btn__icon" aria-hidden="true">‖</span>
+        <span class="btn__label">Pause the trace</span>
+      </button>
     </div>
 
     <dl class="readout" id="readout">
@@ -116,6 +123,7 @@
     <p class="readout__note" id="readout-note">
       <span class="dot" aria-hidden="true"></span>
       Measured from source at <span data-metric="generated">—</span>
+      <span class="visually-hidden" role="status" aria-live="polite" id="metrics-status"></span>
     </p>
   </div>
 </section>
@@ -125,8 +133,9 @@
   <div class="section__head">
     <h2 class="section__title">Selected work</h2>
     <p class="section__note">
-      Six systems. The first three were delivered to CERN; the rest are the
-      infrastructure and instruments that made them possible.
+      Seven systems. The first three were delivered to CERN; the rest are the
+      infrastructure and instruments that made them possible — plus the backup
+      system protecting the one who builds them.
     </p>
   </div>
 
@@ -347,6 +356,59 @@
             (92.2 and 92.1 vs 92.0). The scoring that favours the reference is the
             scoring that was reported first.
           </p>
+        </div>
+      </div>
+    </li>
+
+    <!-- 07 -->
+    <li class="proj" id="origobackup">
+      <div class="proj__head">
+        <p class="proj__tag">Data integrity</p>
+        <h3 class="proj__name">Origo Backup</h3>
+        <p class="proj__summary">
+          Encrypted incremental backup of two Linux machines to Proton Drive,
+          with content‑defined deduplication written from first principles and a
+          fresh‑machine restore path that is exercised, not assumed.
+        </p>
+      </div>
+
+      <div class="proj__body">
+        <dl class="spec">
+          <div><dt>Role</dt><dd>Architecture and implementation</dd></div>
+          <div><dt>Stack</dt><dd>Python 3 stdlib · cryptography · AES‑256‑GCM · SQLite · vanilla JS web UI</dd></div>
+          <div><dt>Scale</dt><dd><span data-metric="systems.origobackup.code_loc">—</span> LOC across <span data-metric="systems.origobackup.files">—</span> files</dd></div>
+          <div><dt>Protects</dt><dd>2 systems over SSH · 2.05 M files / 126 GB · <b>91 tests</b> passing</dd></div>
+        </dl>
+
+        <div class="proj__notes">
+          <h4>What makes it hold up</h4>
+          <ul>
+            <li>
+              <b>The storage layout is the hard part, and it was derived, not chosen.</b>
+              4 MiB content‑defined blocks packed into ~64 MiB encrypted packs, bucketed
+              across folders to fit Proton Drive's 32,767‑entry folder limit — a limit the
+              first live run hit, then designed around, then replaced with a pack layout
+              whose listing cost was measured cold and warm before being accepted.
+            </li>
+            <li>
+              <b>Remote sources stream, they don't mount.</b> Oden is backed up over SSH by
+              a worker that runs there, so no credentials are used on the remote; root
+              scans are sudoised behind an askpass prompt, owner and setuid metadata are
+              preserved by a separate root‑apply restore script, and snapshot‑as‑blocks
+              means unchanged trees dedupe away entirely.
+            </li>
+            <li>
+              <b>Security posture is default‑deny.</b> AES‑256‑GCM with HMAC‑derived key
+              separation, a loopback‑only web UI, a per‑launch API token with Host/Origin
+              checks, and a recovery‑key import that restores onto a fresh machine.
+            </li>
+            <li>
+              <b>Every fix lands with its diagnosis written down.</b> The two dated
+              FIXES documents describe the folder‑limit repair, the listing‑timeout
+              diagnosis with measured times, and the retry/backoff ladders — the same
+              verdict‑first style as the rest of this page.
+            </li>
+          </ul>
         </div>
       </div>
     </li>
@@ -590,7 +652,7 @@
       public web IDE and a hardware benchmark behind it.
     </p>
     <div class="contact__actions">
-      <a class="btn btn--primary btn--lg" href="mailto:founders@ardveriumlabs.com">founders@ardveriumlabs.com</a>
+      <a class="btn btn--primary btn--lg" href="mailto:oskar@osys.one">oskar@osys.one</a>
       <a class="btn btn--lg" href="https://osys.one/">osys.one</a>
     </div>
     <ul class="contact__meta">
@@ -608,7 +670,7 @@
   <div class="foot__in">
     <p class="foot__mark">osys<span class="mark__dot">.</span>one</p>
     <p class="foot__note">
-      Built from measurement. Fonts: Archivo and IBM Plex Mono, self‑hosted under the SIL OFL.
+      © Oskar Mårtensson · Built from measurement. Fonts: Archivo and IBM Plex Mono, self‑hosted under the SIL OFL.
     </p>
     <p class="foot__note foot__note--dim" id="foot-stamp">—</p>
   </div>

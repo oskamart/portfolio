@@ -1,3 +1,4 @@
+// osys-one-portfolio · maintained by the opencode agent session · do not edit from other sessions
 /* ============================================================================
    osys.one — site behaviour
 
@@ -53,6 +54,15 @@ function renderMetrics(manifest) {
   if (stamp && manifest.generated) {
     stamp.textContent = `Manifest generated ${manifest.generated.replace("T", " ").slice(0, 19)} UTC`;
   }
+
+  // Announce the loaded figures once, so a screen-reader user knows the
+  // measured numbers are there rather than "—".
+  const status = document.getElementById("metrics-status");
+  if (status && manifest.totals) {
+    status.textContent =
+      `Figures loaded from source: ${fmt.format(manifest.totals.code_loc)} lines of code, ` +
+      `${fmt.format(manifest.totals.files)} files, ${fmt.format(manifest.totals.commits)} commits.`;
+  }
 }
 
 /* ── 2. hero field ──────────────────────────────────────────────────────── */
@@ -69,8 +79,6 @@ function initHeroField() {
   const ctx = canvas.getContext("2d", { alpha: true });
   if (!ctx) return;
 
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
   let w = 0;
   let h = 0;
   let dpr = 1;
@@ -80,6 +88,9 @@ function initHeroField() {
   let py = 0.5;
   let targetX = 0.5;
   let targetY = 0.5;
+  let paused = false;
+  let reduceQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const reduced = reduceQuery.matches;
 
   function resize() {
     const rect = canvas.getBoundingClientRect();
@@ -181,7 +192,7 @@ function initHeroField() {
   }
 
   function start() {
-    if (reduced) {
+    if (reduced || paused) {
       render();
       return;
     }
@@ -218,6 +229,47 @@ function initHeroField() {
     if (document.hidden) cancelAnimationFrame(raf);
     else start();
   });
+
+  // A change to the motion preference takes effect without a reload.
+  reduceQuery.addEventListener("change", (e) => {
+    if (e.matches) {
+      cancelAnimationFrame(raf);
+      render();
+    } else {
+      start();
+    }
+  });
+
+  // WCAG 2.2.2: the trace runs automatically next to other content, so offer a
+  // visible, keyboard-operable way to stop it.
+  const toggle = document.getElementById("motion-toggle");
+  if (toggle) {
+    const label = toggle.querySelector(".btn__label");
+    const icon = toggle.querySelector(".btn__icon");
+
+    const sync = () => {
+      const stopped = paused || reduced;
+      toggle.setAttribute("aria-pressed", String(stopped));
+      toggle.hidden = false;
+      if (label) label.textContent = stopped ? "Resume the trace" : "Pause the trace";
+      if (icon) icon.textContent = stopped ? "▶" : "‖";
+    };
+
+    toggle.addEventListener("click", () => {
+      if (reduced) return;
+      paused = !paused;
+      if (paused) {
+        cancelAnimationFrame(raf);
+        render();
+      } else {
+        start();
+      }
+      sync();
+    });
+
+    reduceQuery.addEventListener("change", sync);
+    sync();
+  }
 }
 
 /* ── contact field ──────────────────────────────────────────────────────── */
