@@ -1,0 +1,36 @@
+# Local-first serving of the portfolio on Origo.
+#
+# The site is a static tree; this unit serves it on loopback:8090 with the
+# same headers the production server uses.
+#
+# Install (as the o user on the host):
+#   mkdir -p ~/.config/systemd/user
+#   cp deploy/portfolio.service ~/.config/systemd/user/
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now portfolio.service
+#
+# Check:
+#   systemctl --user status portfolio.service
+#   curl -sI http://127.0.0.1:8090/ | head -3
+
+[Unit]
+Description=osys.one portfolio (static, local-first)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/portfolio
+ExecStart=/usr/bin/python3 %h/portfolio/deploy/serve.py --host 127.0.0.1 --port 8090 --root %h/portfolio
+Restart=on-failure
+RestartSec=3
+
+# The service only reads its own directory.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadOnlyPaths=%h/portfolio
+ReadWritePaths=%h/portfolio/assets
+
+[Install]
+WantedBy=default.target

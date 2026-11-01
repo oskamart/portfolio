@@ -366,26 +366,28 @@
   <div class="meas">
 
     <article class="card">
-      <h3 class="card__title">Hardware benchmark board</h3>
-      <p class="card__meta">8 suites · 845 items · 7 models</p>
+      <h3 class="card__title">Hardware benchmark, suite by suite</h3>
+      <p class="card__meta">Leading model · 845 scored items · 8 suites</p>
       <table class="tbl">
-        <caption class="visually-hidden">Pass rate by suite for the leading local model</caption>
+        <caption class="visually-hidden">Pass rate by benchmark suite for the leading local model</caption>
         <thead>
           <tr><th scope="col">Suite</th><th scope="col">Items</th><th scope="col">Pass</th><th scope="col">Rate</th></tr>
         </thead>
         <tbody>
-          <tr><th scope="row">CVDP comprehension</th><td>123</td><td>46</td><td><b>73.0%</b></td></tr>
+          <tr><th scope="row">CVDP comprehension</th><td>63</td><td>46</td><td><b>73.0%</b></td></tr>
           <tr><th scope="row">RTLLM</th><td>50</td><td>36</td><td><b>72.0%</b></td></tr>
           <tr><th scope="row">LogikBench</th><td>149</td><td>99</td><td><b>66.4%</b></td></tr>
           <tr><th scope="row">CVDP debug/modify</th><td>90</td><td>44</td><td><b>48.9%</b></td></tr>
           <tr><th scope="row">ChipBench debug</th><td>178</td><td>83</td><td><b>46.6%</b></td></tr>
-          <tr><th scope="row">CVDP spec→RTL</th><td>172</td><td>77</td><td><b>44.8%</b></td></tr>
+          <tr><th scope="row">CVDP area / ChipBench gen</th><td>72</td><td>33</td><td><b>45.8%</b></td></tr>
+          <tr><th scope="row">CVDP spec&rarr;RTL</th><td>172</td><td>77</td><td><b>44.8%</b></td></tr>
           <tr><th scope="row">ArchXBench</th><td>71</td><td>30</td><td><b>42.3%</b></td></tr>
         </tbody>
       </table>
       <p class="card__foot">
-        A 7‑model oracle reaches 68.8% — <b>31% of items are solved by no model at all</b>,
-        which bounds what any of these numbers can mean.
+        448 of 845 items — <b>53.0% micro, 55.0% macro</b>. A 7&ndash;model oracle reaches 68.8%,
+        so <b>31% of items are solved by no model at all</b>, which bounds what any of these
+        numbers can mean. Sixty CVDP comprehension rows are still waiting on a judge.
       </p>
     </article>
 
