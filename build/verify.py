@@ -1,0 +1,222 @@
+#!/usr/bin/env python3
+"""Validate the portfolio site: links, anchors, asset references, accessibility basics.
+
+Run against a served copy:  python3 build/verify.py [--url http://127.0.0.1:8080/]
+"""
+
+from __future__ import annotations
+
+import argparse
+import html.parser
+import json
+import re
+import sys
+import urllib.error
+import urllib.request
+from pathlib import Path
+from urllib.parse import urljoin
+
+ROOT = Path(__file__).resolve().parent.parent
+
+REQUIRED = {
+    "index.html",
+    "assets/css/site.css",
+    "assets/js/site.js",
+    "assets/manifest.json",
+    "assets/favicon.svg",
+    "assets/fonts/archivo.woff2",
+    "assets/fonts/plexmono-400.woff2",
+    "assets/fonts/plexmono-500.woff2",
+    "assets/fonts/plexmono-600.woff2",
+    "assets/fonts/OFL.txt",
+}
+
+
+class Collector(html.parser.HTMLParser):
+    """Collect ids, links, asset references, and interactive elements with text."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.ids: list[str] = []
+        self.links: list[str] = []
+        self.assets: list[str] = []
+        self.imgs_without_alt: list[str] = []
+        self.interactive: list[tuple[str, str, bool]] = []  # (kind, label, has_text)
+        self.lang: str | None = None
+        self.title: str | None = None
+        self._in_title = False
+        self._stack: list[tuple[str, list[str]]] = []  # (tag, text chunks)
+
+    # -- text accumulation -------------------------------------------------
+    def handle_data(self, data):
+        if self._in_title:
+            self.title = (self.title or "") + data
+        for i in range(len(self._stack)):
+            tag, chunks = self._stack[i]
+            self._stack[i] = (tag, chunks + [data])
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+
+        if tag == "html":
+            self.lang = a.get("lang")
+
+        if tag == "title":
+            self._in_title = True
+
+        if "id" in a and a["id"]:
+            self.ids.append(a["id"])
+
+        if tag == "a" and "href" in a:
+            self.links.append(a["href"])
+            label = a.get("aria-label") or a.get("title") or ""
+            self.interactive.append((f"a[href={a['href']}]", label, False))
+
+        if tag == "link" and a.get("href"):
+            self.assets.append(a["href"])
+        if tag == "script" and a.get("src"):
+            self.assets.append(a["src"])
+        if tag == "img":
+            if a.get("src"):
+                self.assets.append(a["src"])
+            if "alt" not in a:
+                self.imgs_without_alt.append(a.get("src", "?"))
+
+        if tag == "button":
+            label = a.get("aria-label") or a.get("title") or ""
+            self.interactive.append((f"button[{a.get('id', '?')}]", label, False))
+
+        if tag in ("input", "select", "textarea"):
+            self.interactive.append((tag, a.get("aria-label", ""), False))
+
+        if tag not in ("br", "hr", "img", "meta", "link", "input", "source"):
+            self._stack.append((tag, []))
+
+    def handle_endtag(self, tag):
+        if tag == "title":
+            self._in_title = False
+        # Pop to the matching open element and fold its text into the parent.
+        for i in range(len(self._stack) - 1, -1, -1):
+            if self._stack[i][0] == tag:
+                _, chunks = self._stack.pop(i)
+                text = "".join(chunks).strip()
+                if text and self._stack:
+                    ptag, pchunks = self._stack[-1]
+                    self._stack[-1] = (ptag, pchunks + [text])
+                # Record text on the interactive element we just closed.
+                if tag in ("a", "button") and text:
+                    for j in range(len(self.interactive) - 1, -1, -1):
+                        kind, label, has_text = self.interactive[j]
+                        if kind.startswith(tag) and not label and not has_text:
+                            self.interactive[j] = (kind, label, True)
+                            break
+                break
+
+
+def check_local_assets(errors: list[str], notes: list[str]) -> Collector:
+    missing = {p for p in REQUIRED if not (ROOT / p).exists()}
+    for m in sorted(missing):
+        errors.append(f"missing required file: {m}")
+    if not missing:
+        notes.append(f"all {len(REQUIRED)} required files present")
+
+    doc = Collector()
+    doc.feed((ROOT / "index.html").read_text(encoding="utf-8"))
+
+    if not doc.lang:
+        errors.append("<html> has no lang attribute")
+    if not doc.title or not doc.title.strip():
+        errors.append("<title> is empty")
+    else:
+        notes.append(f"title: {doc.title.strip()[:64]}")
+
+    for d in sorted({i for i in doc.ids if doc.ids.count(i) > 1}):
+        errors.append(f"duplicate id: {d}")
+
+    for href in doc.links:
+        if href.startswith("#"):
+            if href[1:] and href[1:] not in doc.ids:
+                errors.append(f"anchor target missing: {href}")
+        elif href.startswith(("http://", "https://", "mailto:", "tel:")):
+            continue
+        else:
+            if not (ROOT / href.split("#")[0]).exists():
+                errors.append(f"link target missing: {href}")
+
+    for src in doc.assets:
+        if not src or src.startswith(("http://", "https://", "data:")):
+            continue
+        if not (ROOT / src.split("?")[0]).exists():
+            errors.append(f"asset missing: {src}")
+
+    css = (ROOT / "assets/css/site.css").read_text(encoding="utf-8")
+    for ref in re.findall(r'url\(["\']?([^"\')]+)["\']?\)', css):
+        if ref.startswith(("data:", "http")):
+            continue
+        if not (ROOT / "assets/css" / ref).exists():
+            errors.append(f"css asset missing: {ref}")
+
+    for img in doc.imgs_without_alt:
+        errors.append(f"<img> without alt attribute: {img}")
+
+    # An interactive element needs an accessible name: aria-label, title, or text.
+    for kind, label, has_text in doc.interactive:
+        if not label and not has_text:
+            errors.append(f"unlabelled interactive element: {kind}")
+
+    notes.append(
+        f"{len(doc.links)} links, {len(doc.assets)} asset refs, "
+        f"{len(doc.ids)} ids, {len(doc.interactive)} interactive elements checked"
+    )
+    return doc
+
+
+def check_served(errors: list[str], notes: list[str], base: str) -> None:
+    for path in ("/", "/assets/manifest.json", "/assets/css/site.css", "/assets/js/site.js"):
+        url = urljoin(base, path)
+        try:
+            with urllib.request.urlopen(url, timeout=10) as resp:
+                body = resp.read()
+                if resp.status != 200:
+                    errors.append(f"{url} -> HTTP {resp.status}")
+                elif path.endswith(".json"):
+                    try:
+                        json.loads(body)
+                        notes.append("manifest.json parses as JSON")
+                    except json.JSONDecodeError as exc:
+                        errors.append(f"manifest.json invalid: {exc}")
+                elif path.endswith(".css"):
+                    notes.append("site.css served")
+        except (urllib.error.URLError, OSError) as exc:
+            errors.append(f"{url} unreachable: {exc}")
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--url", default="http://127.0.0.1:8080/")
+    ap.add_argument("--no-serve-check", action="store_true")
+    args = ap.parse_args()
+
+    errors: list[str] = []
+    notes: list[str] = []
+
+    check_local_assets(errors, notes)
+
+    if not args.no_serve_check:
+        check_served(errors, notes, args.url)
+
+    print("── verification ─────────────────────────────────────────────")
+    for n in notes:
+        print(f"  ok   {n}")
+    if errors:
+        print()
+        for e in errors:
+            print(f"  FAIL {e}")
+        print(f"\n{len(errors)} problem(s) found.")
+        return 1
+    print("\nno problems found.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,79 @@
+{
+  "generated": "2026-11-01T19:27:28+00:00",
+  "generator": "build/manifest.py",
+  "systems": {
+    "uvmstack": {
+      "files": 746,
+      "code_loc": 128610,
+      "doc_loc": 22192,
+      "bytes": 6825141,
+      "commits": 303
+    },
+    "haelo": {
+      "files": 16,
+      "code_loc": 7503,
+      "doc_loc": 477,
+      "bytes": 427245,
+      "commits": 0
+    },
+    "odenflow": {
+      "files": 260,
+      "code_loc": 99775,
+      "doc_loc": 4253,
+      "bytes": 5576738,
+      "commits": 122
+    },
+    "ardverium": {
+      "files": 90,
+      "code_loc": 30763,
+      "doc_loc": 7766,
+      "bytes": 2549064,
+      "commits": 0
+    },
+    "lorapilot": {
+      "files": 109,
+      "code_loc": 34813,
+      "doc_loc": 0,
+      "bytes": 1666889,
+      "commits": 7
+    },
+    "lorapilot_tests": {
+      "files": 91,
+      "code_loc": 15240,
+      "doc_loc": 0,
+      "bytes": 736306,
+      "commits": 0
+    }
+  },
+  "totals": {
+    "code_loc": 316704,
+    "doc_loc": 34688,
+    "files": 1312,
+    "commits": 432
+  },
+  "taa_core": {
+    "loc": 2562,
+    "designs": 4,
+    "identical_across_designs": true,
+    "files": {
+      "taa-glsl.js": {
+        "copies": 4,
+        "identical": true,
+        "md5": "7650fa982f6f7a3f18fc11cf3d83c2c5",
+        "loc": 1724
+      },
+      "taa-runtime.js": {
+        "copies": 4,
+        "identical": true,
+        "md5": "cf72bcd58ce9d1c5d09dfd8021c55c74",
+        "loc": 400
+      },
+      "taa-three.js": {
+        "copies": 4,
+        "identical": true,
+        "md5": "bd345880e24f8beb100291bfc33361e0",
+        "loc": 438
+      }
+    }
+  }
+}
