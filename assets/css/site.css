@@ -1,3 +1,4 @@
+/* osys-one-portfolio · maintained by the opencode agent session · do not edit from other sessions */
 /* ============================================================================
    osys.one — portfolio stylesheet
 
@@ -16,13 +17,18 @@
   --surface-2:   #10151c;
   --rule:        #1c232d;
   --rule-soft:   #161c24;
-  --rule-strong: #2b3542;
+  /* Interactive borders need 3:1 against the ground (WCAG 1.4.11). */
+  --rule-strong: #5a6674;
+  --rule-mark:   #2b3542;  /* decorative marks only — never a control edge */
 
   /* ink */
   --ink:      #e9edf3;
   --ink-mid:  #b3bdcb;
   --ink-dim:  #7d8798;
-  --ink-faint:#4d5666;
+  /* Small labels sit on --ground and --surface; this is 5.2:1 and 5.0:1
+     respectively, so it clears WCAG AA (4.5:1) at every size it is used. */
+  --ink-faint:#788395;
+  --ink-ghost:#4d5666;  /* decorative only — never used for text */
 
   /* signal */
   --mint:   #72ffd9;
@@ -77,6 +83,14 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
 }
+
+/* The masthead is sticky, so a focused element must still clear it
+   (WCAG 2.4.11, focus not obscured). */
+:focus-visible {
+  scroll-margin-top: 6rem;
+  scroll-margin-bottom: 4rem;
+}
+[id] { scroll-margin-top: 6rem; }
 
 body {
   background: var(--ground);
@@ -178,14 +192,19 @@ sup { font-size: 0.68em; line-height: 0; }
   padding-block: 0.35rem;
   border-bottom: 1px solid transparent;
   transition: color 0.16s ease, border-color 0.16s ease;
+  /* WCAG 2.5.8: 24x24 minimum for pointer targets. */
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
 }
 .nav a:hover { color: var(--ink); border-bottom-color: var(--rule-strong); }
 
 .menu {
   display: none;
-  background: none; border: 1px solid var(--rule);
+  background: none; border: 1px solid var(--rule-strong);
   padding: 0.5rem 0.75rem; cursor: pointer;
   align-items: center; gap: 0.5rem;
+  min-height: 44px;
 }
 .menu__label { font-family: var(--mono); font-size: 0.8125rem; color: var(--ink-mid); }
 .menu__bars { display: grid; gap: 4px; width: 16px; }
@@ -248,7 +267,7 @@ sup { font-size: 0.68em; line-height: 0; }
 .hero__kicker::before {
   content: ""; display: inline-block;
   width: 1.75rem; height: 1px; vertical-align: middle;
-  margin-right: 0.7rem; background: var(--rule-strong);
+  margin-right: 0.7rem; background: var(--rule-mark);
 }
 
 .hero__title {
@@ -289,6 +308,7 @@ sup { font-size: 0.68em; line-height: 0; }
   --edge: var(--rule-strong);
   display: inline-flex; align-items: center; gap: 0.5rem;
   padding: 0.7rem 1.15rem;
+  min-height: 44px; /* comfortable pointer target */
   border: var(--rule-w) solid var(--edge);
   background: transparent;
   color: var(--ink);
@@ -297,6 +317,7 @@ sup { font-size: 0.68em; line-height: 0; }
   font-size: 0.8125rem;
   letter-spacing: 0.02em;
   border-radius: 2px;
+  cursor: pointer;
   transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
 }
 .btn:hover { border-color: var(--mint); color: var(--mint); }
@@ -310,6 +331,16 @@ sup { font-size: 0.68em; line-height: 0; }
   filter: brightness(1.12);
 }
 .btn--lg { padding: 0.95rem 1.5rem; font-size: 0.875rem; }
+
+/* The hero's trace runs automatically beside other content, so WCAG 2.2.2
+   requires a way to stop it. */
+.btn--quiet { color: var(--ink-dim); }
+.btn--quiet:hover { color: var(--mint); }
+.btn__icon {
+  font-family: var(--mono);
+  font-size: 0.9em;
+  line-height: 1;
+}
 
 /* readout strip */
 .readout {
@@ -349,6 +380,8 @@ sup { font-size: 0.68em; line-height: 0; }
   color: var(--ink-faint);
   display: flex; align-items: center; gap: 0.55rem;
 }
+/* The measured numbers arrive after load; announce them once, politely. */
+.readout__note .visually-hidden { position: absolute; }
 .dot {
   width: 6px; height: 6px; flex: none;
   background: var(--mint); border-radius: 50%;
@@ -708,7 +741,7 @@ sup { font-size: 0.68em; line-height: 0; }
 .foot__note {
   font-family: var(--mono); font-size: 0.75rem; color: var(--ink-faint);
 }
-.foot__note--dim { color: var(--ink-faint); opacity: 0.7; }
+.foot__note--dim { color: var(--ink-faint); opacity: 0.9; }
 
 /* ── responsive ────────────────────────────────────────────────────────── */
 @media (max-width: 62rem) {

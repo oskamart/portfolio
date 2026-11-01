@@ -1,3 +1,4 @@
+# osys-one-portfolio · maintained by the opencode agent session · do not edit from other sessions
 #!/usr/bin/env python3
 """Validate the portfolio site: links, anchors, asset references, accessibility basics.
 

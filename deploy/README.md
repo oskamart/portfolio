@@ -1,5 +1,7 @@
 # osys.one — deployment
 
+<!-- osys-one-portfolio · maintained by the opencode agent session · do not edit from other sessions -->
+
 The site is a **static tree with no build step**. What is generated is only
 `assets/manifest.json`, which carries the measured numbers the page displays.
 
@@ -19,7 +21,7 @@ deploy/                    this directory
 ## Local first
 
 ```bash
-cd ~/portfolio
+cd ~/portfolio-osys-one
 python3 serve.py            # http://127.0.0.1:8080/
 ```
 

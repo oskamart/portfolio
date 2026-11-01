@@ -1,3 +1,4 @@
+# osys-one-portfolio · maintained by the opencode agent session · do not edit from other sessions
 #!/usr/bin/env python3
 """Capture a page region by scrolling, using a temporary instrumented copy.
 

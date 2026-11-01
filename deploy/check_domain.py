@@ -1,3 +1,4 @@
+# osys-one-portfolio · maintained by the opencode agent session · do not edit from other sessions
 #!/usr/bin/env python3
 """Check whether osys.one is pointed at this deployment, and report what is
 still missing.

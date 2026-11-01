@@ -1,3 +1,4 @@
+# osys-one-portfolio · maintained by the opencode agent session · do not edit from other sessions
 #!/usr/bin/env bash
 # Publish the portfolio to GitHub Pages, which serves osys.one.
 #
@@ -36,7 +37,7 @@ TOKEN="$(token || true)"
 [[ -n "$TOKEN" ]] || die "no GitHub token found (set GITHUB_TOKEN or log in with gh)"
 
 OWNER="oskamart"
-REPO="portfolio"
+REPO="osys-one-portfolio"
 BRANCH="main"
 
 # ── 1. regenerate the measured manifest ──────────────────────────────────────

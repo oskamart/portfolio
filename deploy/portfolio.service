@@ -1,3 +1,5 @@
+# osys-one-portfolio · maintained by the opencode agent session · do not edit from other sessions
+#
 # Local-first serving of the portfolio on Origo.
 #
 # The site is a static tree; this unit serves it on loopback:8090 with the
@@ -11,7 +13,7 @@
 #
 # Check:
 #   systemctl --user status portfolio.service
-#   curl -sI http://127.0.0.1:8090/ | head -3
+#   curl -sI http://127.0.0.1:8743/ | head -3
 
 [Unit]
 Description=osys.one portfolio (static, local-first)
@@ -19,8 +21,8 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=%h/portfolio
-ExecStart=/usr/bin/python3 %h/portfolio/deploy/serve.py --host 127.0.0.1 --port 8090 --root %h/portfolio
+WorkingDirectory=%h/portfolio-osys-one
+ExecStart=/usr/bin/python3 %h/portfolio-osys-one/deploy/serve.py --host 127.0.0.1 --port 8743 --root %h/portfolio-osys-one
 Restart=on-failure
 RestartSec=3
 
@@ -29,8 +31,8 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=read-only
-ReadOnlyPaths=%h/portfolio
-ReadWritePaths=%h/portfolio/assets
+ReadOnlyPaths=%h/portfolio-osys-one
+ReadWritePaths=%h/portfolio-osys-one/assets
 
 [Install]
 WantedBy=default.target
