@@ -37,7 +37,7 @@ TOKEN="$(token || true)"
 [[ -n "$TOKEN" ]] || die "no GitHub token found (set GITHUB_TOKEN or log in with gh)"
 
 OWNER="oskamart"
-REPO="osys-one-portfolio"
+REPO="portfolio"
 BRANCH="main"
 
 # ── 1. regenerate the measured manifest ──────────────────────────────────────
@@ -78,6 +78,20 @@ Co-Authored-By: opencode <opencode@opencode.ai>"
   ok "committed"
 fi
 
+# The CNAME file binds osys.one to this Pages site. It lives in the source
+# now, so any push keeps it — but a stray delete would silently detach the
+# domain, so it is restored and checked before pushing.
+CNAME="osys.one"
+if [[ ! -f CNAME ]] || [[ "$(cat CNAME)" != "$CNAME" ]]; then
+  say "restoring CNAME ($CNAME)"
+  printf '%s\n' "$CNAME" > CNAME
+  git add CNAME
+  git -c user.name="oskamart" -c user.email="oskamart@proton.me" \
+      commit -q -m "Portfolio: restore CNAME
+
+Co-Authored-By: opencode <opencode@opencode.ai>"
+fi
+
 # ── 4. push ──────────────────────────────────────────────────────────────────
 if [[ $DRY -eq 1 ]]; then
   say "dry run: would push to $OWNER/$REPO"
@@ -85,12 +99,15 @@ if [[ $DRY -eq 1 ]]; then
 fi
 
 say "pushing to $OWNER/$REPO ($BRANCH)"
-git push -q "https://$OWNER:$TOKEN@github.com/$OWNER/$REPO.git" "$BRANCH" --force
+# Never force. The branch is shared with other agents working on this site;
+# a force-push would discard their commits, and it is what dropped the CNAME
+# file once already.
+git push "https://$OWNER:$TOKEN@github.com/$OWNER/$REPO.git" "$BRANCH"
 ok "pushed"
 
 # ── 5. confirm ───────────────────────────────────────────────────────────────
 say "confirming the live site"
-for host in "https://$OWNER.github.io/$REPO/" "https://$REPO.pages.dev/"; do
+for host in "https://$OWNER.github.io/$REPO/" "https://osys.one/"; do
   code=$(curl -s -o /dev/null -m 20 -w '%{http_code}' "$host" || echo 000)
   if [[ "$code" == "200" ]]; then
     ok "$host → $code"
