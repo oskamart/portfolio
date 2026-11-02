@@ -86,14 +86,16 @@
     </h1>
 
     <p class="hero__lede">
-      I build agentic hardware&#8209;verification engines, the harnesses that measure them,
-      and the graphics and research tools around them. Everything below ships with its
-      numbers attached — generated from the source trees, not typed in.
+      I build the proxies, harnesses and instruments that make agentic
+      verification engines work for real — a gateway repair layer, a
+      frozen&#8209;benchmark evaluation harness, real&#8209;time WebGL instruments,
+      and the encrypted backup protecting the operator. Everything below ships
+      with its numbers attached — generated from the source trees, not typed in.
     </p>
 
     <div class="hero__actions">
       <a class="btn btn--primary" href="#work">See the work</a>
-      <a class="btn" href="https://github.com/trishinraj/uvm_engine" rel="noopener">UVMStack on GitHub</a>
+      <a class="btn" href="https://github.com/trishinraj/uvm_engine" rel="noopener">The engine — UVMStack, by Trishna Raj</a>
       <button class="btn btn--quiet" type="button" id="motion-toggle"
               aria-pressed="false" hidden>
         <span class="btn__icon" aria-hidden="true">‖</span>
@@ -133,72 +135,28 @@
   <div class="section__head">
     <h2 class="section__title">Selected work</h2>
     <p class="section__note">
-      Seven systems. The first three were delivered to CERN; the rest are the
-      infrastructure and instruments that made them possible — plus the backup
-      system protecting the one who builds them.
+      Six systems. The first was delivered to CERN; the rest are the
+      infrastructure and instruments that made it possible — plus the backup
+      system protecting the one who builds them. The verification engine these
+      attach to, UVMStack, is an external dependency (Trishna Raj) built by its
+      author, and is credited where it belongs: as the thing measured, not the
+      work listed.
     </p>
   </div>
 
   <ol class="work">
 
     <!-- 01 -->
-    <li class="proj proj--wide" id="uvmstack">
-      <div class="proj__head">
-        <p class="proj__tag">Agentic hardware verification</p>
-        <h3 class="proj__name">UVMStack <span class="proj__alias">/ AVA</span></h3>
-        <p class="proj__summary">
-          An agentic system that turns RTL and design intent into a reviewable UVM
-          verification workflow — test plan, coverage plan, testbench — with human
-          sign&#8209;off gates enforced as exit codes, not good intentions.
-        </p>
-      </div>
-
-      <div class="proj__body">
-        <dl class="spec">
-          <div><dt>Role</dt><dd>Architecture, engine, agent orchestration, delivery</dd></div>
-          <div><dt>Stack</dt><dd>Python ≥3.11 · TypeScript · Electron/React · SystemVerilog · Jinja2 · openpyxl · pyslang</dd></div>
-          <div><dt>Scale</dt><dd><span data-metric="systems.uvmstack.code_loc">—</span> LOC across <span data-metric="systems.uvmstack.files">—</span> files, <span data-metric="systems.uvmstack.commits">—</span> commits</dd></div>
-          <div><dt>Delivered</dt><dd>CERN AI Gateway, two desktop builds, 1,935 frontend tests passing</dd></div>
-        </dl>
-
-        <div class="proj__notes">
-          <h4>What makes it hold up</h4>
-          <ul>
-            <li>
-              <b>Reproducibility is the product.</b> Every run emits a commit‑ready bundle:
-              the generated <code>.sv</code>, the plan workbook, a trajectory of every LLM and
-              tool call with hashes, and a manifest pinning model version, skill‑pack SHA,
-              simulator version and seed, RTL hash, spec hash, plan hash and final coverage.
-            </li>
-            <li>
-              <b>Three pluggable layers.</b> Agent, model and simulation backend are each a
-              Python <code>Protocol</code> with multiple implementations, pinned in the run
-              manifest so a replay reconstructs the exact stack.
-            </li>
-            <li>
-              <b>Failure is loud.</b> No silent degradation: every failure path re‑raises
-              with context or names itself on stderr. Any loop over paid calls persists each
-              unit the moment it completes, so a crash costs the in‑flight unit and nothing else.
-            </li>
-            <li>
-              <b>Two testbench dialects.</b> <code>init&#8209;tb --style uvm</code> and
-              <code>--style sv</code> share one input‑preparation path, so the two styles
-              cannot disagree about ports, roles or plan content.
-            </li>
-          </ul>
-        </div>
-      </div>
-    </li>
-
-    <!-- 02 -->
-    <li class="proj" id="haelo">
+    <li class="proj proj--wide" id="haelo">
       <div class="proj__head">
         <p class="proj__tag">Gateway repair proxy</p>
         <h3 class="proj__name">Haelo</h3>
         <p class="proj__summary">
-          A small OpenAI‑compatible proxy that sits between the engine and any
-          OpenAI‑compatible gateway. The engine does not change: it talks to the
-          proxy exactly as it would talk to the gateway.
+          A small OpenAI‑compatible proxy that sits between the verification
+          engine — <a href="https://github.com/trishinraj/uvm_engine" rel="noopener">UVMStack</a>,
+          by Trishna Raj and external to this page — and any OpenAI‑compatible
+          gateway. The engine does not change: it talks to the proxy exactly as
+          it would talk to the gateway.
         </p>
       </div>
 
@@ -228,7 +186,7 @@
       </div>
     </li>
 
-    <!-- 03 -->
+    <!-- 02 -->
     <li class="proj" id="odenflow">
       <div class="proj__head">
         <p class="proj__tag">Evaluation harness</p>
@@ -260,7 +218,7 @@
       </div>
     </li>
 
-    <!-- 04 -->
+    <!-- 03 -->
     <li class="proj" id="ardverium">
       <div class="proj__head">
         <p class="proj__tag">Real&#8209;time instrument design</p>
@@ -292,7 +250,7 @@
       </div>
     </li>
 
-    <!-- 05 -->
+    <!-- 04 -->
     <li class="proj" id="lorapilot">
       <div class="proj__head">
         <p class="proj__tag">Model training</p>
@@ -324,7 +282,7 @@
       </div>
     </li>
 
-    <!-- 06 -->
+    <!-- 05 -->
     <li class="proj" id="swissregs">
       <div class="proj__head">
         <p class="proj__tag">Evaluation · 27 models scored</p>
@@ -360,7 +318,7 @@
       </div>
     </li>
 
-    <!-- 07 -->
+    <!-- 06 -->
     <li class="proj" id="origobackup">
       <div class="proj__head">
         <p class="proj__tag">Data integrity</p>
@@ -646,10 +604,11 @@
 <!-- ─────────────────────────────  contact  ───────────────────────────── -->
 <section class="contact" id="contact">
   <div class="contact__in">
-    <h2 class="contact__title">Talk to me about the verification engine, the harness, or the instruments.</h2>
+    <h2 class="contact__title">Talk to me about the repair layer, the harness, or the instruments.</h2>
     <p class="contact__lede">
-      Currently delivering UVMStack and Haelo into an evaluation programme, with a
-      public web IDE and a hardware benchmark behind it.
+      Currently delivering Haelo into an engine verification programme — the
+      engine underneath, UVMStack, is Trishna Raj's — with a public web IDE and
+      a hardware benchmark behind it.
     </p>
     <div class="contact__actions">
       <a class="btn btn--primary btn--lg" href="mailto:oskar@osys.one">oskar@osys.one</a>

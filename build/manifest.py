@@ -130,12 +130,11 @@ def measure_taa_core(base: Path) -> dict:
 
 
 # --- The systems the portfolio documents -----------------------------------
+# Note: UVMStack (the verification engine, github.com/trishinraj/uvm_engine)
+# is Trishna Raj's work, not the portfolio owner's, so it is NOT measured here.
+# It appears on the page only as the external thing Haelo and Oden Flow attach
+# to. No number on the page may claim its LOC as authored source.
 SYSTEMS = {
-    "uvmstack": {
-        "label": "UVMStack (AVA)",
-        "root": "oden-uvm-staging/uvm_engine-v2",
-        "repo": "oden-uvm-staging/uvm_engine",
-    },
     "haelo": {
         "label": "Haelo",
         "root": "Desktop/haelo-proxy",

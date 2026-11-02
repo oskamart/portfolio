@@ -1,14 +1,7 @@
 {
-  "generated": "2026-11-01T20:13:39+00:00",
+  "generated": "2026-11-02T10:04:24+00:00",
   "generator": "build/manifest.py",
   "systems": {
-    "uvmstack": {
-      "files": 746,
-      "code_loc": 128610,
-      "doc_loc": 22192,
-      "bytes": 6825141,
-      "commits": 303
-    },
     "haelo": {
       "files": 16,
       "code_loc": 7503,
@@ -53,10 +46,10 @@
     }
   },
   "totals": {
-    "code_loc": 321163,
-    "doc_loc": 35022,
-    "files": 1331,
-    "commits": 432
+    "code_loc": 192553,
+    "doc_loc": 12830,
+    "files": 585,
+    "commits": 129
   },
   "taa_core": {
     "loc": 2562,
