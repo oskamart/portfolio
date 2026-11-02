@@ -32,6 +32,7 @@ under one agent's namespace should ever be edited by another.
 |---|---|---|---|---|
 | GLM | 8742 | `shots/glm-*` | `/tmp/opencode/glm-*` | `build/glm-shoot.py` |
 | opencode | 8743 | `shots/opencode/` | `/tmp/opencode/opencode-logs/` | `build/opencode-shoot.py`, `build/opencode-shoot_at.py` |
+| qwen-agent (Qwen3.8) | 8123 | (own tree: `~/portfolio-qwen/shots/`) | `/tmp/portfolio-qwen-serve.log` | own tree entirely |
 
 Add a row for yourself when you start.
 
@@ -100,3 +101,7 @@ The Proton Mail MX and SPF records must not be touched.
 for the two names above. It needs `GODADDY_API_KEY` and
 `GODADDY_API_SECRET`. `deploy/check_domain.py` reports where the domain
 currently stands.
+
+## qwen-agent namespace
+
+`~/portfolio-qwen` is a fully separate tree (own git repo, port 8123, launched via its `serve-qwen.sh`). It was forked from this repo's `main` at 21:07. Do not edit it or bind its port; nothing of it needs merging here unless the user asks.
